@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Button, Input } from "reactstrap";
 import Axios from "axios";
 import Search from "./Components/Search";
 import ViewImages from "./Components/ViewImages";
