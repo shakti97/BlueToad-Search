@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+import { Button, Input } from "reactstrap";
+import Axios from "axios";
+import Search from "./Components/Search";
+import ViewImages from "./Components/ViewImages";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const getImages = async (query) => {
+  let url = `https://api.unsplash.com/search/photos?query=${query}&per_page=50&client_id=o5j2x0iUuKUeHoMtqjG9_KHvnUWl0HDF0g453y5Ju7U`;
+  let images = await Axios.get(url);
+  return images.data.results.splice(0, 25);
+};
+
+class App extends Component {
+  state = {
+    query: "",
+    images: [],
+  };
+  fetchImage = async (query) => {
+    if (query !== this.state.query) {
+      let images = await getImages(query);
+      images = images.map((image) => image.urls.regular);
+      this.setState({
+        images,
+        query,
+      });
+    }
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Search fetchImages={this.fetchImage} />
+        <ViewImages images={this.state.images} />
+      </div>
+    );
+  }
 }
 
 export default App;
